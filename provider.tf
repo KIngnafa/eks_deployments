@@ -1,4 +1,4 @@
 provider "aws" {
   region  = "us-east-1"
-  profile = "stackprog_yinkar"
+  profile = "stackadmin_dev"
 }
