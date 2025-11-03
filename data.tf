@@ -23,3 +23,13 @@ locals {
     "${local.az2_name}-2",
   ]
 }
+
+data "aws_ami" "stack_ami" {
+  owners      = ["self"]
+  name_regex  = "^ami-stack-2"
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ami-stack-2"]
+  }
+}

@@ -17,14 +17,15 @@ module "VPC-BASE" {
   cluster_name      = local.cluster_name
 }
 module "SECURITY-BASE" {
-  source = "git::ssh://git@github.com/KIngnafa/aws-terraform-modules.git//MODULES/SECURITY-BASE"
+  source = "git::ssh://git@github.com/KIngnafa/aws-terraform-modules.git//MODULES/SECURITY-BASE/bastion"
 
   vpc_id = module.VPC-BASE.vpc_id
 }
+
 module "EC2-BASE" {
   source = "git::ssh://git@github.com/KIngnafa/aws-terraform-modules.git//MODULES/EC2-BASE"
 
-  security_group = module.SECURITY_GROUP.bastion_sg_id
+  security_group = module.SECURITY-BASE.bastion_sg_id
   public_az      = local.public_by_az
-  bootstrap      = local.bastion_bootstrap
+  ami            = data.aws_ami.stack_ami
 }
