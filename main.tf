@@ -25,6 +25,7 @@ module "SECURITY-BASE" {
 module "EC2-BASE" {
   source = "git::ssh://git@github.com/KIngnafa/aws-terraform-modules.git//MODULES/EC2-BASE"
 
+  EC2_COMPONENTS = var.EC2_COMPONENTS
   security_group = module.SECURITY-BASE.bastion_sg_id
   public_az      = local.public_by_az
   ami            = data.aws_ami.stack_ami
