@@ -54,6 +54,27 @@ variable "VPC_COMPONENTS" {
   }
 }
 
+variable "EC2_COMPONENTS" {
+  type        = map(string)
+  description = "Map containing standard EC2 components"
+  default = {
+    image_id                    = "ami-0a3de17ca0cb151be"
+    instance_type               = "t2.micro"
+    min_size                    = 2
+    max_size                    = 2
+    desired_capacity            = 2
+    encrypted                   = "true"
+    volume_size                 = 30
+    volume_type                 = "gp2"
+    delete_on_termination       = true
+    associate_public_ip_address = true
+    iam_instance_profile        = "EC2_TO_S3_ADMIN"
+    key_name                    = "stack_devops_man"
+    tag_bastion                 = "dev_bastion"
+    tag_db                      = "ACT6_DB"
+  }
+}
+
 variable "public_cidrs" {
   type = object({
     az1 = string
