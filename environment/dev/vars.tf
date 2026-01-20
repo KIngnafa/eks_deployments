@@ -1,14 +1,7 @@
-locals {
-  cluster_name          = var.EKS_COMPONENTS["cluster_name"]
-  nat_gateway_name      = "${local.cluster_name}-${var.EKS_COMPONENTS["nat_gateway_name"]}"
-  internet_gateway_name = "${local.cluster_name}-${var.VPC_COMPONENTS["igw_name"]}"
-  worker_node_name      = "${local.cluster_name}-${var.EKS_COMPONENTS["node_name"]}"
-  launch_template_name  = "${var.EKS_COMPONENTS["cluster_name"]}-${var.EKS_COMPONENTS["launch_template_name"]}"
-}
+
 
 variable "EKS_COMPONENTS" {
-  type        = map(string)
-  description = "Map containing standard EC2 components"
+  description = "A map of EKS components configurations"
   default = {
     #cluster
     cluster_name           = "D1-cluster"
@@ -18,11 +11,10 @@ variable "EKS_COMPONENTS" {
     private_rt_name        = "private_rt"
     cluster_igw            = "igw"
     public_rt_name         = "public_rt"
-
     ##node group
     capacity_type        = "ON_DEMAND"
     node_group_name      = "private_node_group"
-    instance_types       = "t3.small"
+    instance_types       = ["t3.small"] # Keep this as a list in the default value
     desired_size         = 2
     max_size             = 3
     min_size             = 2
@@ -30,9 +22,28 @@ variable "EKS_COMPONENTS" {
     launch_template_name = "launch_template"
     #update_config
     max_unavailable = 1
-
   }
+  type = object({
+    # Update the type constraint here to match the default value structure
+    cluster_name           = string
+    cluster_version        = string
+    endpoint_public_access = bool
+    nat_gateway_name       = string
+    private_rt_name        = string
+    cluster_igw            = string
+    public_rt_name         = string
+    capacity_type          = string
+    node_group_name        = string
+    instance_types         = list(string) # <-- CHANGE THIS LINE from 'string' to 'list(string)'
+    desired_size           = number
+    max_size               = number
+    min_size               = number
+    node_name              = string
+    launch_template_name   = string
+    max_unavailable        = number
+  })
 }
+
 
 #VPC
 variable "VPC_COMPONENTS" {
