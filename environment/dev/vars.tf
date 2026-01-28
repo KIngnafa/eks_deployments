@@ -1,9 +1,55 @@
-locals {
-  cluster_name          = var.EKS_COMPONENTS["cluster_name"]
-  nat_gateway_name      = "${local.cluster_name}-${var.EKS_COMPONENTS["nat_gateway_name"]}"
-  internet_gateway_name = "${local.cluster_name}-${var.VPC_COMPONENTS["igw_name"]}"
-  worker_node_name      = "${local.cluster_name}-${var.EKS_COMPONENTS["node_name"]}"
-  launch_template_name  = "${var.EKS_COMPONENTS["cluster_name"]}-${var.EKS_COMPONENTS["launch_template_name"]}"
+variable "environment" {
+  description = "environment variable"
+  type        = string
+}
+
+variable "vpc_cidr" {
+  description = "Netowrk cidr variable"
+  type        = string
+}
+
+variable "vpc_name" {
+  type = string
+}
+
+variable "single_nat_gateway" {
+  type = bool
+}
+
+variable "cluster_name" {
+  type = string
+}
+
+variable "cluster_version" {
+  type = string
+}
+
+
+variable "endpoint_public_access" {
+  type = bool
+}
+
+variable "addons" {
+  description = "EKS addons configuration keyed by addon name"
+  type = map(object({
+    enabled           = bool
+    version           = optional(string)
+    resolve_conflicts = optional(string)
+  }))
+  default = {}
+}
+
+variable "node_group" {
+  description = "EKS managed node group configuration"
+  type = object({
+    name            = string
+    capacity_type   = string
+    instance_types  = list(string)
+    desired_size    = number
+    min_size        = number
+    max_size        = number
+    max_unavailable = number
+  })
 }
 
 variable "EKS_COMPONENTS" {

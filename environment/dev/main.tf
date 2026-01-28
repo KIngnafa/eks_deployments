@@ -1,18 +1,35 @@
-module "EKS-BASE" {
-  source = "git::ssh://git@github.com/KIngnafa/aws-terraform-modules.git//MODULES/EKS-BASE-1"
+module "EKS-BASE-CONTROL-PLANE" {
+  source = "git::ssh://git@github.com/KIngnafa/aws-terraform-modules.git//MODULES/EKS-BASE-1/controlplane"
 
-  EKS_COMPONENTS       = var.EKS_COMPONENTS
-  launch_template_name = local.launch_template_name
-  private_subnet_ids   = module.VPC-BASE.private_subnet_ids
+  cluster_name           = var.cluster_name
+  cluster_version        = var.cluster_version
+  endpoint_public_access = var.endpoint_public_access
+  addons                 = var.addons
+
+  private_subnet_ids = module.VPC-BASE.private_subnet_ids
+  common_tags        = local.tags
+}
+
+module "EKS-BASE-DATA-PLANE" {
+  source = "git::ssh://git@github.com/KIngnafa/aws-terraform-modules.git//MODULES/EKS-BASE-1/dataplane/nodes"
+
+  cluster_name       = module.EKS-BASE-CONTROL-PLANE.cluster_name
+  private_subnet_ids = module.VPC-BASE.private_subnet_ids
+  node_group         = var.node_group
+  common_tags        = local.tags
 }
 
 module "VPC-BASE" {
   source = "git::ssh://git@github.com/KIngnafa/aws-terraform-modules.git//MODULES/VPC-BASE"
 
-  private_az        = local.private_by_az
-  public_az         = local.public_by_az
-  db_subnet_keys    = local.db_subnet_keys
-  availability_zone = data.aws_availability_zones.available
-  cluster_name      = local.cluster_name
+  vpc_name           = var.vpc_name
+  public_subnets     = local.public_by_az
+  private_subnets    = local.private_by_az
+  single_nat_gateway = var.single_nat_gateway
+  enable_nat_gateway = true
+  vpc_cidr           = var.vpc_cidr
+
+  # If your VPC module supports tags, pass them.
+  common_tags = local.tags
 }
 
