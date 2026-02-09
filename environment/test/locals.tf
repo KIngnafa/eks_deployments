@@ -3,22 +3,17 @@ locals {
     Environment = var.environment
     OwnerEmail  = var.required_tags.OwnerEmail
     System      = var.required_tags.System
-    Backup      = lower(var.required_tags.Backup) # if string yes/no
+    Backup      = lower(var.required_tags.Backup)
   }
 
   final_tags = merge(local.enforced_tags, var.common_tags)
 }
 
-
-
 locals {
-  # Choose how many AZs per env (example)
   az_count = var.environment == "prod" ? 3 : 2
 
   azs = slice(data.aws_availability_zones.available.names, 0, local.az_count)
 
-  # Example: make each subnet a /20 inside the /16
-  # Adjust newbits/indexing to your taste.
   public_by_az = {
     for i, az in local.azs :
     az => cidrsubnet(var.vpc_cidr, 4, i)
@@ -27,7 +22,7 @@ locals {
   private_by_az = {
     for i, az in local.azs :
     az => [
-      cidrsubnet(var.vpc_cidr, 4, i + local.az_count) # one private subnet per AZ
+      cidrsubnet(var.vpc_cidr, 4, i + local.az_count)
     ]
   }
 }

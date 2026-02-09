@@ -31,4 +31,3 @@ module "VPC-BASE" {
 
   common_tags = local.final_tags
 }
-
