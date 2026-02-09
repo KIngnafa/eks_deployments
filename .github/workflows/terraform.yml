@@ -1,0 +1,64 @@
+#Name and Triggers
+name: Terraform CI 
+
+# name - Shows up in GitHub Actions tab
+# on.pull_request - Runs when PR targets main
+# on.push - Runs when code merges to main
+on: 
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# runs-on: ubuntu-latest - Uses a Linux runner
+# working-directory - All commands run from environment/dev
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+
+jobs:
+
+  # runs-on: ubuntu-latest - Uses a Linux runner
+  # working-directory - All commands run from environment/dev
+  terraform:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: environment/dev
+
+    steps:
+    # Pulls your repo code onto the runner
+    - name: Checkout code
+      uses: actions/checkout@v4
+  
+    # Uses OIDC to assume your IAM role
+    # No secrets stored - GitHub proves its identity to AWS
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::975050060097:role/github-actions-terraform
+        aws-region: us-east-1
+
+    # Installs Terraform on the runner
+    - name: Setup Terraform 
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.5.0
+  
+    # Fails if code isn't formatted (style enforcement)
+    - name: Terraform Format Check
+      run: terraform fmt -check -recursive
+
+    # downloading modules and providers
+    - name: Terraform Init
+      run: terraform init 
+      # Checks Syntax is correct
+    - name: Terraform Validate
+      run: terraform validate
+
+    # Shows what would change (without applying)
+    - name: Terraform Plan
+      run: terraform plan -var-file=../common.tfvars -var-file=dev.tfvars -no-color
