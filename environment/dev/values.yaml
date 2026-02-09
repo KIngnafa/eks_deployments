@@ -1,0 +1,16 @@
+serviceAccount:
+  create: true
+  name: aws-load-balancer-controller-sa
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::891377046654:role/MyAmazonEKSLoadBalancerControllerRole
+
+clusterName: D1-cluster
+region: us-east-1
+vpcId: vpc-075193f38fa563a8e  # your EKS VPC ID
+
+leaderElection:
+  namespace: kube-system
+
+rbac:
+  create: true
+
