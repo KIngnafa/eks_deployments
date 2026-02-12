@@ -163,39 +163,3 @@ variable "EC2_COMPONENTS" {
     tag_db                      = "ACT6_DB"
   }
 }
-
-variable "public_cidrs" {
-  type = object({
-    az1 = string
-    az2 = string
-  })
-  default = {
-    az1 = "10.0.0.0/24"
-    az2 = "10.0.1.0/24"
-  }
-
-  validation {
-    condition     = can(cidrnetmask(var.public_cidrs.az1)) && can(cidrnetmask(var.public_cidrs.az2))
-    error_message = "public_cidrs.az1 and az2 must be valid CIDR blocks."
-  }
-}
-
-variable "private_cidrs" {
-  type = object({
-    az1 = list(string)
-    az2 = list(string)
-  })
-  default = {
-    az1 = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24", "10.0.14.0/24"]
-    az2 = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24", "10.0.23.0/24", "10.0.24.0/24"]
-  }
-
-  validation {
-    condition     = length(var.private_cidrs.az1) == 5 && length(var.private_cidrs.az2) == 5
-    error_message = "Provide exactly 5 private CIDRs for az1 and 5 for az2."
-  }
-  validation {
-    condition     = alltrue([for c in concat(var.private_cidrs.az1, var.private_cidrs.az2) : can(cidrnetmask(c))])
-    error_message = "All private_cidrs entries must be valid CIDR blocks."
-  }
-}

@@ -32,6 +32,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Configure Git for Private Modules # ← Add this
+        run: git config --global url."https://x-access-token:${{ secrets.MODULES_TOKEN}}@github.com/"
+
       # Uses OIDC to assume your IAM role
       # No secrets stored - GitHub proves its identity to AWS
       - name: Configure AWS Credentials
@@ -48,9 +51,10 @@ jobs:
 
       # Fails if code isn't formatted (style enforcement)
       - name: Terraform Format Check
-        run: terraform fmt -check -recursive
+        run:
+          terraform fmt -check -recursive
 
-      # downloading modules and providers
+          # downloading modules and providers
       - name: Terraform Init
         run: terraform init
         # Checks Syntax is correct
