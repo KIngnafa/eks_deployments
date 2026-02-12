@@ -1,10 +1,10 @@
 #Name and Triggers
-name: Terraform CI 
+name: Terraform CI
 
 # name - Shows up in GitHub Actions tab
 # on.pull_request - Runs when PR targets main
 # on.push - Runs when code merges to main
-on: 
+on:
   pull_request:
     branches: [main]
   push:
@@ -17,9 +17,7 @@ permissions:
   contents: read
   pull-requests: write
 
-
 jobs:
-
   # runs-on: ubuntu-latest - Uses a Linux runner
   # working-directory - All commands run from environment/dev
   terraform:
@@ -30,35 +28,40 @@ jobs:
         working-directory: environment/dev
 
     steps:
-    # Pulls your repo code onto the runner
-    - name: Checkout code
-      uses: actions/checkout@v4
-  
-    # Uses OIDC to assume your IAM role
-    # No secrets stored - GitHub proves its identity to AWS
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: arn:aws:iam::975050060097:role/github-actions-terraform
-        aws-region: us-east-1
+      # Pulls your repo code onto the runner
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # Installs Terraform on the runner
-    - name: Setup Terraform 
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: 1.5.0
-  
-    # Fails if code isn't formatted (style enforcement)
-    - name: Terraform Format Check
-      run: terraform fmt -check -recursive
+      - name: Configure Git for Private Modules
+        run: |
+          git config --global url."https://x-access-token:${{ secrets.MODULES_TOKEN}}@github.com/".insteadOf "https://github.com/"
 
-    # downloading modules and providers
-    - name: Terraform Init
-      run: terraform init 
-      # Checks Syntax is correct
-    - name: Terraform Validate
-      run: terraform validate
+      # Uses OIDC to assume your IAM role
+      # No secrets stored - GitHub proves its identity to AWS
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.aut_acc_id}}:role/github-actions-terraform
+          aws-region: us-east-1
 
-    # Shows what would change (without applying)
-    - name: Terraform Plan
-      run: terraform plan -var-file=../common.tfvars -var-file=dev.tfvars -no-color
+      # Installs Terraform on the runner
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.12.2
+
+      # Fails if code isn't formatted (style enforcement)
+      - name: Terraform Format Check
+        run:
+          terraform fmt -check -recursive
+
+          # downloading modules and providers
+      - name: Terraform Init
+        run: terraform init
+        # Checks Syntax is correct
+      - name: Terraform Validate
+        run: terraform validate
+
+      # Shows what would change (without applying)
+      - name: Terraform Plan
+        run: terraform plan -var-file=../common.tfvars -var-file=dev.tfvars -no-color
