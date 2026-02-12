@@ -1,9 +1,9 @@
-environment  = "dev"
-vpc_cidr = "10.20.0.0/16"
-cluster_name = "d1-dev-cluster"
-vpc_name = "d1-vpc"
-single_nat_gateway = true
-cluster_version = "1.31"
+environment            = "dev"
+vpc_cidr               = "10.20.0.0/16"
+cluster_name           = "d1-dev-cluster"
+vpc_name               = "d1-vpc"
+single_nat_gateway     = true
+cluster_version        = "1.31"
 endpoint_public_access = true
 
 assume_role_arn = "arn:aws:iam::891377046654:role/Engineer"
