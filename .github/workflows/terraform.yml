@@ -32,8 +32,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configure Git for Private Modules # ← Add this
-        run: git config --global url."https://x-access-token:${{ secrets.MODULES_TOKEN}}@github.com/"
+      - name: Configure Git for Private Modules
+        run: |
+          git config --global url."https://x-access-token:${{ secrets.MODULES_TOKEN}}@github.com/".insteadOf "https://github.com/"
 
       # Uses OIDC to assume your IAM role
       # No secrets stored - GitHub proves its identity to AWS
