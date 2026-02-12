@@ -50,6 +50,11 @@ jobs:
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
+      - name: Configure Git for Private Modules
+        env:
+          TOKEN: ${{ secrets.MODULES_TOKEN }}
+        run: git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
+
       # downloading modules and providers
       - name: Terraform Init
         run: terraform init
