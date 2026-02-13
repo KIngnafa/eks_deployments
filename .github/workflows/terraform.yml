@@ -17,6 +17,10 @@ permissions:
   contents: read
   pull-requests: write
 
+env:
+  AWS_REGION: us-east-1
+  TF_VERSION: 1.12.2
+
 jobs:
   # runs-on: ubuntu-latest - Uses a Linux runner
   # working-directory - All commands run from environment/dev
@@ -37,23 +41,21 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::975050060097:role/github-actions-terraform
-          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::${{secrets.AUT_ACC_ID}}:role/github-actions-terraform
+          aws-region: ${{env.AWS_REGION}}
 
       # Installs Terraform on the runner
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.12.2
+          terraform_version: ${{env.TF_VERSION}}
 
       # Fails if code isn't formatted (style enforcement)
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
       - name: Configure Git for Private Modules
-        env:
-          TOKEN: ${{ secrets.MODULES_TOKEN }}
-        run: git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
+        run: git config --global url."https://x-access-token:${{secrets.MODULES_TOKEN}}@github.com/".insteadOf "https://github.com/"
 
       # downloading modules and providers
       - name: Terraform Init
