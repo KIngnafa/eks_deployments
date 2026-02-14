@@ -67,3 +67,6 @@ jobs:
       # Shows what would change (without applying)
       - name: Terraform Plan
         run: terraform plan -var-file=../common.tfvars -var-file=dev.tfvars -no-color
+
+      - name: Terraform Apply
+        run: terraform apply -var-file=../common.tfvars -var-file=dev.tfvars -no-color --auto-approve
