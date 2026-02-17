@@ -10,9 +10,10 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
-*.tfvars
 *.tfvars.json
 # Local tooling
 *.log
 .DS_Store
 modules.json
+install.cmd
+CLAUDE.md
