@@ -1,5 +1,5 @@
 module "EKS-BASE-CONTROL-PLANE" {
-  source = "git::ssh://git@github.com/KIngnafa/aws-terraform-modules.git//MODULES/EKS-BASE-1/controlplane"
+  source = "git::https://github.com/KIngnafa/aws-terraform-modules.git//MODULES/EKS-BASE-1/controlplane"
 
   cluster_name           = var.cluster_name
   cluster_version        = var.cluster_version
@@ -10,7 +10,7 @@ module "EKS-BASE-CONTROL-PLANE" {
 }
 
 module "EKS-BASE-DATA-PLANE" {
-  source = "git::ssh://git@github.com/KIngnafa/aws-terraform-modules.git//MODULES/EKS-BASE-1/dataplane/nodes"
+  source = "git::https://github.com/KIngnafa/aws-terraform-modules.git//MODULES/EKS-BASE-1/dataplane/nodes"
 
   cluster_name       = module.EKS-BASE-CONTROL-PLANE.cluster_name
   private_subnet_ids = module.VPC-BASE.private_subnet_ids
@@ -19,7 +19,7 @@ module "EKS-BASE-DATA-PLANE" {
 }
 
 module "VPC-BASE" {
-  source = "git::ssh://git@github.com/KIngnafa/aws-terraform-modules.git//MODULES/VPC-BASE"
+  source = "git::https://github.com/KIngnafa/aws-terraform-modules.git//MODULES/VPC-BASE"
 
   vpc_name           = var.vpc_name
   public_subnets     = local.public_by_az
@@ -31,4 +31,3 @@ module "VPC-BASE" {
 
   common_tags = local.final_tags
 }
-
