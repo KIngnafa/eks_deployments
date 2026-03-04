@@ -14,3 +14,5 @@ override.tf.json
 *.log
 .DS_Store
 modules.json
+install.cmd
+CLAUDE.md
