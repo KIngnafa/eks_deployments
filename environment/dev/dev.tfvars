@@ -30,4 +30,3 @@ route53 = {
   zone_name   = ""
   record_name = ""
 }
-
