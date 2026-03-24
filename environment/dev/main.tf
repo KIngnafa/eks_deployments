@@ -12,10 +12,12 @@ module "EKS-BASE-CONTROL-PLANE" {
 module "EKS-BASE-DATA-PLANE" {
   source = "git::https://github.com/KIngnafa/aws-terraform-modules.git//MODULES/EKS-BASE-1/dataplane/nodes"
 
-  cluster_name       = module.EKS-BASE-CONTROL-PLANE.cluster_name
-  private_subnet_ids = module.VPC-BASE.private_subnet_ids
-  node_group         = var.node_group
-  common_tags        = local.final_tags
+  cluster_name         = module.EKS-BASE-CONTROL-PLANE.cluster_name
+  private_subnet_ids   = module.VPC-BASE.private_subnet_ids
+  node_group           = var.node_group
+  common_tags          = local.final_tags
+  launch_template_name = var.launch_template_name
+  ami_id               = var.ami_id
 }
 
 module "VPC-BASE" {

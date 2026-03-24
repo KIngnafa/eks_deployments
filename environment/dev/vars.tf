@@ -82,6 +82,18 @@ variable "addons" {
   default = {}
 }
 
+variable "launch_template_name" {
+  description = "Launch template name for the node group. Required when using a custom AMI."
+  type        = string
+  default     = null
+}
+
+variable "ami_id" {
+  description = "Custom AMI ID (e.g. Bottlerocket). If null, EKS uses the default AMI."
+  type        = string
+  default     = null
+}
+
 variable "node_group" {
   description = "EKS managed node group configuration"
   type = object({

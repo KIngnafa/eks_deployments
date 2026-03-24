@@ -3,7 +3,7 @@ vpc_cidr               = "10.20.0.0/16"
 cluster_name           = "d1-dev-cluster"
 vpc_name               = "d1-vpc"
 single_nat_gateway     = true
-cluster_version        = "1.31"
+cluster_version        = "1.32"
 endpoint_public_access = true
 
 assume_role_arn = "arn:aws:iam::891377046654:role/Engineer"
@@ -13,6 +13,9 @@ required_tags = {
   System     = "eks-platform"
   Backup     = "yes"
 }
+
+launch_template_name = "d1-dev-bottlerocket-lt"
+ami_id               = "ami-0026d8294bcd292ca" # bottlerocket-aws-k8s-1.32-x86_64-v1.44.0-244cd3a5
 
 node_group = {
   name            = "d1-dev-ng"
