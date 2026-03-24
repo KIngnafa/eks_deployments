@@ -18,6 +18,8 @@ module "EKS-BASE-DATA-PLANE" {
   common_tags          = local.final_tags
   launch_template_name = var.launch_template_name
   ami_id               = var.ami_id
+  cluster_endpoint     = module.EKS-BASE-CONTROL-PLANE.cluster_object.endpoint
+  cluster_ca           = module.EKS-BASE-CONTROL-PLANE.cluster_object.certificate_authority[0].data
 }
 
 module "VPC-BASE" {
