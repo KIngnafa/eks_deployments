@@ -15,7 +15,7 @@ required_tags = {
 }
 
 launch_template_name = "d1-dev-bottlerocket-lt"
-ami_id               = "ami-0026d8294bcd292ca" # bottlerocket-aws-k8s-1.32-x86_64-v1.44.0-244cd3a5
+ami_id               = "ami-0171a1acb9472cdec" # bottlerocket-aws-k8s-1.32-x86_64-v1.55.0-d93bb1b1
 
 node_group = {
   name            = "d1-dev-ng"
